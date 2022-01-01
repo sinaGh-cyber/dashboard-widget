@@ -35,7 +35,7 @@ const Dashboard = () => {
   useEffect(() => {
     getOrders();
     getProducts();
-  }, [orders, products]);
+  }, [orders, products, income]);
 
   return (
     <>
