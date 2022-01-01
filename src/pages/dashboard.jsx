@@ -53,7 +53,7 @@ const Dashboard = () => {
           <DashboardWidget
             title="درآمد کل"
             icon="coins"
-            value={`${income} تومان`}
+            value={`${income}  تومان`}
             color="bg-warning"
             testId="total-incomes"
           />
