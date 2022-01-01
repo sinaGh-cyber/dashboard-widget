@@ -1,11 +1,41 @@
-import { useEffect, useState } from 'react'
-import axios from 'axios'
-import DashboardWidget from 'components/dashboard/DashboardWidget'
+import { useEffect, useState } from 'react';
+import axios from 'axios';
+import DashboardWidget from 'components/dashboard/DashboardWidget';
 
 const Dashboard = () => {
+  const [products, setProducts] = useState([]);
+  const [orders, setOrders] = useState([]);
+  const [income, setIncome] = useState([]);
+
+  const getOrders = async () => {
+    try {
+      const res = await axios.get('http://localhost:8000/orders');
+      const { data } = res;
+      let orderCounter = 0;
+      let totalPrice = 0;
+      data.forEach((order) => {
+        if (order.status) {
+          orderCounter++;
+          totalPrice += order.price;
+        }
+      });
+
+      setOrders(orderCounter);
+      setIncome(totalPrice);
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  const getProducts = async () => {
+    const res = await axios.get('http://localhost:8000/products');
+    const { data } = res;
+    setProducts(data.length);
+  };
   useEffect(() => {
-    // put your codes here...
-  }, [])
+    getOrders();
+    getProducts();
+  }, [orders, products]);
 
   return (
     <>
@@ -14,7 +44,7 @@ const Dashboard = () => {
           <DashboardWidget
             title="تعداد محصولات"
             icon="tshirt"
-            value={0}
+            value={products}
             color="bg-primary"
             testId="products-count"
           />
@@ -23,7 +53,7 @@ const Dashboard = () => {
           <DashboardWidget
             title="درآمد کل"
             icon="coins"
-            value={0}
+            value={income}
             color="bg-warning"
             testId="total-incomes"
           />
@@ -32,14 +62,14 @@ const Dashboard = () => {
           <DashboardWidget
             title="تعداد سفارشات موفق"
             icon="shopping-cart"
-            value={0}
+            value={orders}
             color="bg-danger"
             testId="successful-orders-count"
           />
         </div>
       </div>
     </>
-  )
-}
+  );
+};
 
-export default Dashboard
+export default Dashboard;
